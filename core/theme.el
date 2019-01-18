@@ -1,0 +1,2 @@
+;;; Package --- Summary
+;;; color theme
