@@ -35,3 +35,30 @@
     (lambda ($pair)
       (define-key @keymap-name (kbd (car $pair)) (cdr $pair)))
     @key-cmd-alist))
+
+
+(defvar dt-project-root '(".git" "package.json")
+  "The list of files located in the project's root folder.
+Used to determine whether its a root folder or not.")
+
+(defun dt-dirname (dirname)
+  (file-name-directory
+    (directory-file-name
+      (file-name-as-directory dirname))))
+
+(defun dt-project-root-p (dirname)
+  (cl-loop for pj-dir in dt-project-root
+    thereis (file-exists-p
+              (concat dirname "/" pj-dir))))
+
+(defun dt-project-dir (dirname)
+  (let ((dir dirname)
+         (found nil)
+         (i 0))
+    (while (and (< i 5) (null found)) ; Check max depth, add check for the root folder "/" @todo
+      (progn
+        (if (dt-project-root-p dir)
+          (setq found t)
+          (setq dir (dt-dirname dir)))
+        (setq i (1+ i))))
+    (if found dir dirname)))
