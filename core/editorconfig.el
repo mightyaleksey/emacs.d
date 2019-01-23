@@ -1,7 +1,7 @@
 ;;; Package --- Summary
 ;;; editorconfig - sets the coding styles through the .editorconfig file
 
-;;; editorconfig-after-apply-functions - hook for setting custom indent values
+;;; @todo handle other props related to whitespaces and etc.
 
 (use-package editorconfig
   :defer nil

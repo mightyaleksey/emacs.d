@@ -44,7 +44,7 @@ Used to determine whether its a root folder or not.")
 (defun dt-dirname (dirname)
   (file-name-directory
     (directory-file-name
-      (file-name-as-directory dirname))))
+      (expand-file-name dirname))))
 
 (defun dt-project-root-p (dirname)
   (cl-loop for pj-dir in dt-project-root

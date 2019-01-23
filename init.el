@@ -55,12 +55,13 @@
 (load-user-file "core/xah-fly-keys.el")
 (load-user-file "core/ivy.el")
 (load-user-file "core/neotree.el")
+(load-user-file "core/find-file-in-project.el")
 (load-user-file "core/theme.el")
 ;;; helpers
 (load-user-file "core/multiple-cursors.el")
 (load-user-file "core/company.el")
-(load-user-file "core/linum.el")
 (load-user-file "core/editorconfig.el")
+(load-user-file "core/linum.el")
 (load-user-file "core/flycheck.el")
 ;;; syntax
 (load-user-file "core/css-mode.el")
