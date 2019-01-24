@@ -54,12 +54,9 @@
   (defun dt-neotree-show ()
     "Open the NeoTree window."
     (interactive)
-    (let ((dir))
-      (if buffer-file-name
-        (setq dir buffer-file-name)
-        (setq dir default-directory))
-      (neotree-dir (dt-project-dir dir))
-      (neotree-find dir)))
+    (let ((file buffer-file-name))
+      (neotree-dir (dt-project-dir))
+      (neotree-find file)))
 
   (defun dt-neotree-hide ()
     "Close the NeoTree window."

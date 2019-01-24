@@ -12,9 +12,7 @@
 
   (defun dt-find-file-in-project ()
     (interactive)
-    (let ((dir))
-      (if buffer-file-name
-        (setq dir buffer-file-name)
-        (setq dir default-directory))
-      (setq ffip-project-root (dt-project-dir dir))
-      (find-file-in-project))))
+    (setq ffip-project-root (dt-project-dir))
+    (find-file-in-project))
+
+  )

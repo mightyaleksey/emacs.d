@@ -28,6 +28,8 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 
+;;; common helpers
+
 (defun dt-map-keys (@keymap-name @key-cmd-alist)
   "Define keys in a declarative way."
   (interactive)
@@ -36,29 +38,53 @@
       (define-key @keymap-name (kbd (car $pair)) (cdr $pair)))
     @key-cmd-alist))
 
+(defun insert-mdash ()
+  "Insert medium dash symbol."
+  (interactive)
+  (insert-char 8212))
+
+
+;;; project root directory lookup methods
 
 (defvar dt-project-root '(".git" "package.json")
   "The list of files located in the project's root folder.
 Used to determine whether its a root folder or not.")
 
-(defun dt-dirname (dirname)
+
+(defun dt-current-dir ()
+  "Get buffer's directory based on its file name or default-directory if nill."
+  (interactive)
+  (if buffer-file-name
+    (file-name-directory buffer-file-name)
+    default-directory))
+
+(defun dt-parent-dir (dirname)
   (file-name-directory
-    (directory-file-name
-      (expand-file-name dirname))))
+    (directory-file-name dirname)))
 
-(defun dt-project-root-p (dirname)
-  (cl-loop for pj-dir in dt-project-root
+(defun dt-project-dir-p (dirname)
+  (cl-loop for file in dt-project-root
     thereis (file-exists-p
-              (concat dirname "/" pj-dir))))
+              (expand-file-name file dirname))))
 
-(defun dt-project-dir (dirname)
+(defun dt-find-project-dir (dirname)
   (let ((dir dirname)
-         (found nil)
+         (wasfound nil)
          (i 0))
-    (while (and (< i 5) (null found)) ; Check max depth, add check for the root folder "/" @todo
+
+    ;; @todo remove excess checks for same dirs (assume dirname == "/")
+    (while (and (< i 7) (not wasfound))
       (progn
-        (if (dt-project-root-p dir)
-          (setq found t)
-          (setq dir (dt-dirname dir)))
+        (if (dt-project-dir-p dir)
+          (setq wasfound t)
+          (setq dir (dt-parent-dir dir)))
+
         (setq i (1+ i))))
-    (if found dir dirname)))
+
+    (if wasfound dir dirname)))
+
+(defun dt-project-dir ()
+  "Get project directory for the current buffer."
+  (interactive)
+  (dt-find-project-dir
+    (dt-current-dir)))

@@ -277,6 +277,7 @@
 
 
   (global-set-key (kbd "<home>") 'xah-fly-command-mode-activate-no-hook)
+  (global-set-key (kbd "M-_") 'insert-mdash)
 
   (xah-fly-keys 1))
 
