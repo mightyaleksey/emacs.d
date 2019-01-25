@@ -1,0 +1,18 @@
+# -*- mode: snippet -*-
+# name: react class component
+# key: rcc
+# --
+import React from 'react';
+import PropTypes from 'prop-types';
+
+class ${1:`(dt-file-name "Name")`} extends React.Component {
+  static propTypes = {};
+
+  render() {
+    return (
+      $2
+    );
+  }
+}
+
+export default $1;

@@ -22,6 +22,9 @@
 (setq inhibit-startup-screen t)
 
 
+(column-number-mode)
+
+
 ;;; deal with whitespaces
 (setq-default indent-tabs-mode nil)
 (setq require-final-newline t)
@@ -73,7 +76,7 @@ Used to determine whether its a root folder or not.")
          (i 0))
 
     ;; @todo remove excess checks for same dirs (assume dirname == "/")
-    (while (and (< i 7) (not wasfound))
+    (while (and (< i 7) (not wasfound) dir)
       (progn
         (if (dt-project-dir-p dir)
           (setq wasfound t)

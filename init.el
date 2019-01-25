@@ -60,9 +60,12 @@
 ;;; helpers
 (load-user-file "core/multiple-cursors.el")
 (load-user-file "core/company.el")
+(load-user-file "core/yasnippet.el")
 (load-user-file "core/editorconfig.el")
 (load-user-file "core/linum.el")
 (load-user-file "core/flycheck.el")
+(load-user-file "core/doc.el")
+(load-user-file "core/smartparens.el")
 ;;; syntax
 (load-user-file "core/css-mode.el")
 (load-user-file "core/js-mode.el")

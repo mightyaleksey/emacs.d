@@ -177,6 +177,12 @@
   (dt-map-keys
     xah-fly-key-map
     '(
+       ("C-7"  . xah-previous-user-buffer)
+       ("C-8"  . xah-next-user-buffer)
+
+       ("C-9"  . scroll-down-command)
+       ("C-0"  . scroll-up-command)
+
        ("C-a"  . mark-whole-buffer)
        ("C-n"  . xah-new-empty-buffer)
        ("C-o"  . find-file)

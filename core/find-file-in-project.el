@@ -8,7 +8,7 @@
   ("C-p" . dt-find-file-in-project)
 
   :config
-  (setq ffip-find-options "-maxdepth 4") ; Saves from hanging in the "~/" directory
+  (setq ffip-find-options "-maxdepth 5") ; Saves from hanging in the "~/" directory
 
   (defun dt-find-file-in-project ()
     (interactive)

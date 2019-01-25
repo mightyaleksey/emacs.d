@@ -5,24 +5,26 @@
   :defer t
 
   :bind
-  (("C-b" . dt-neotree-show)
+  (("C-b"      . dt-neotree-show)
     :map neotree-mode-map
-    ("C-b" . dt-neotree-hide)
-    (","   . xah-next-window-or-frame)
+    ("C-b"     . dt-neotree-hide)
+    (","       . xah-next-window-or-frame)
     ;;; movement keys
-    ("i"   . neotree-previous-line)
-    ("k"   . neotree-next-line)
-    ("j"   . neotree-collapse-all)
-    ("l"   . neotree-enter)
+    ("i"       . neotree-previous-line)
+    ("k"       . neotree-next-line)
+    ("j"       . neotree-collapse-all)
+    ("l"       . neotree-enter)
+    ("<left>"  . neotree-collapse-all)
+    ("<right>" . neotree-enter)
     ;;; modification
-    ("n"   . neotree-create-node)
-    ("m"   . neotree-rename-node)
-    ("r"   . neotree-delete-node)
+    ("n"       . neotree-create-node)
+    ("m"       . neotree-rename-node)
+    ("r"       . neotree-delete-node)
     ;;; other
-    ("c"   . neotree-change-root)
-    ("d"   . neotree-dir)
-    ("q"   . dt-neotree-hide)
-    ("e"   . neotree-enter)
+    ("c"       . neotree-change-root)
+    ("d"       . neotree-dir)
+    ("q"       . dt-neotree-hide)
+    ("e"       . neotree-enter)
     )
 
   :hook
@@ -40,6 +42,7 @@
   (setq neo-show-hidden-files t)
   (setq neo-show-updir-line nil)
   (setq neo-smart-open t)
+  (setq neo-theme 'arrow)
   (setq neo-window-position 'right)
 
   ;;; show only directory name on the top
