@@ -1,3 +1,26 @@
+(use-package css-mode
+  :defer t
+  :mode ("\\.styl$" . css-mode))
+
+
+(use-package markdown-mode
+  :defer t)
+
+
+(use-package pug-mode
+  :defer t)
+
+
+(use-package tide
+  :defer t
+  :init
+  (defun setup-tide-mode ()
+    (interactive)
+    (tide-setup)
+    (eldoc-mode t)
+    (tide-hl-identifier-mode t))
+  )
+
 (use-package js
   :defer t
 
@@ -23,4 +46,12 @@ turn off indentation support for it."
     ("C-d" . nil)
     (">"   . nil))
 
-  :mode ("\\.js" . rjsx-mode))
+  :mode ("\\.js" . rjsx-mode)
+
+  :hook (rjsx-mode . setup-tide-mode))
+
+
+(use-package typescript-mode
+  :defer t
+  :mode "\\.tsx"
+  :hook (typescript-mode . setup-tide-mode))

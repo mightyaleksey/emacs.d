@@ -1,7 +1,15 @@
-;;; Package --- Summary
-;;; xah-fly-keys - A modal keybinding for emacs (like vim)
+(defun dt-map-keys (@keymap-name @key-cmd-alist)
+  "Define keys in a declarative way."
+  (interactive)
+  (mapc
+    (lambda ($pair)
+      (define-key @keymap-name (kbd (car $pair)) (cdr $pair)))
+    @key-cmd-alist))
 
-;;; @see https://github.com/xahlee/xah-fly-keys
+(defun insert-mdash ()
+  "Insert medium dash symbol."
+  (interactive)
+  (insert-char 8212))
 
 (defun split-window-below-and-focus ()
   "Split window on two and focus one below."
@@ -85,9 +93,6 @@
          ("." . xah-forward-right-bracket)
          ("/" . xah-goto-matching-bracket)
          ))
-
-    (define-key xah-fly-key-map (kbd "a")
-      (if (fboundp 'smex) 'smex (if (fboundp 'helm-M-x) 'helm-M-x 'execute-extended-command)))
 
     (progn
       (setq xah-fly-insert-state-q nil)
@@ -191,7 +196,27 @@
        ("C-w"  . xah-close-current-buffer)
        ("C-z"  . undo)
        ("C-\\" . comment-line)
+
+       ("C-ф"  . mark-whole-buffer)
+       ("C-т"  . xah-new-empty-buffer)
+       ("C-щ"  . find-file)
+       ("C-ы"  . save-buffer)
+       ("C-м"  . yank)
+       ("C-ц"  . xah-close-current-buffer)
+       ("C-я"  . undo)
+
+       ("M-_"  . insert-mdash)
        ))
+
+  (when (not (display-graphic-p))
+    (dt-map-keys
+      xah-fly-key-map
+      '(
+         ("ESC <up>"   . backward-paragraph)
+         ("ESC <down>" . forward-paragraph)
+         ("M-b"        . xah-previous-user-buffer)
+         ("M-f"        . xah-next-user-buffer)
+         )))
 
 
   (defun xah-fly-keys-russian-on ()
@@ -290,3 +315,137 @@
 
 (use-package which-key
   :config (which-key-mode))
+
+
+(use-package ivy
+  :defer t
+
+  :bind
+  (:map ivy-minibuffer-map
+    ("C-M-m" . ivy-immediate-done) ; use current input instead of current candidate (used fo file creation)
+    )
+
+  :init
+  (setq ivy-count-format "")
+  (setq ivy-extra-directories nil)
+  (setq ivy-re-builders-alist '((read-file-name-internal . ivy--regex-plus)
+                                 (t . ivy--regex-fuzzy)))
+
+  (ivy-mode 1))
+
+
+(use-package neotree
+  :defer t
+
+  :bind
+  (("C-b"      . dt-neotree-show)
+    ("C-и"     . dt-neotree-show)
+    :map neotree-mode-map
+    ("C-b"     . dt-neotree-hide)
+    ("C-и"     . dt-neotree-hide)
+    (","       . xah-next-window-or-frame)
+    ;;; movement keys
+    ("i"       . neotree-previous-line)
+    ("k"       . neotree-next-line)
+    ("j"       . neotree-collapse-all)
+    ("l"       . neotree-enter)
+    ("<left>"  . neotree-collapse-all)
+    ("<right>" . neotree-enter)
+    ;;; modification
+    ("n"       . neotree-create-node)
+    ("m"       . neotree-rename-node)
+    ("r"       . neotree-delete-node)
+    ;;; other
+    ("c"       . neotree-change-root)
+    ("d"       . neotree-dir)
+    ("q"       . dt-neotree-hide)
+    ("e"       . neotree-enter)
+    )
+
+  :hook
+  (neo-enter . (lambda (type &rest arg)
+                 (if (and (not (eq (neo-global--get-window)
+                                 (selected-window)))
+                       (equal type 'file))
+                   (progn
+                     (neotree-hide)
+                     (xah-fly-command-mode-activate))
+                   )))
+  (neo-after-create . (lambda (&rest arg) (xah-fly-insert-mode-activate)))
+
+  :config
+  (setq neo-show-hidden-files t)
+  (setq neo-show-updir-line nil)
+  (setq neo-smart-open t)
+  (setq neo-theme 'arrow)
+  (setq neo-window-position 'right)
+
+  ;;; show only directory name on the top
+  (defun neo-buffer--insert-root-entry (node)
+    (neo-buffer--node-list-set nil node)
+    (insert
+      (propertize (neo-path--file-short-name node) 'face 'neo-root-dir-face))
+    (neo-buffer--newline-and-begin))
+
+
+  ;;; custom helpers
+  (defun dt-neotree-show ()
+    "Open the NeoTree window."
+    (interactive)
+    (let ((file buffer-file-name))
+      (neotree-dir (vcs-project-dir))
+      (neotree-find file)))
+
+  (defun dt-neotree-hide ()
+    "Close the NeoTree window."
+    (interactive)
+    (neotree-hide)
+    (xah-fly-command-mode-activate))
+
+  )
+
+
+(use-package find-file-in-project
+  :defer t
+
+  :bind
+  ("C-p" . dt-find-file-in-project)
+  ("C-з" . dt-find-file-in-project)
+
+  :config
+  (setq ffip-find-options "-maxdepth 5") ; Saves from hanging in the "~/" directory
+
+  (defun dt-find-file-in-project ()
+    (interactive)
+    (setq ffip-project-root (vcs-project-dir))
+    (find-file-in-project))
+
+  )
+
+
+(use-package multiple-cursors
+  :commands
+  (
+    mc/mark-next-like-this
+	  mc/mark-next-like-this-word
+	  mc/skip-to-next-like-this
+	  mc/edit-ends-of-lines)
+
+  :bind
+  (
+    ("C-k" . mc/mark-next-like-this)
+	  ("C-d" . mc/mark-next-like-this-word)
+	  ("C-f" . mc/skip-to-next-like-this)
+	  ("C-l" . mc/edit-ends-of-lines))
+
+  :config
+  (setq mc/cmds-to-run-for-all
+    '(
+       xah-beginning-of-line-or-block
+       xah-end-of-line-or-block
+       xah-copy-line-or-region
+       xah-paste-or-paste-previous
+       xah-backward-kill-word
+       xah-kill-word
+       xah-insert-space-before
+       )))

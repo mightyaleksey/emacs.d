@@ -1,3 +1,4 @@
+;;; measure load time
 (setq startup-time (current-time))
 
 (add-hook 'after-init-hook
@@ -7,6 +8,7 @@
   (message "Loaded in %.3fs" elapsed-time))
 
 
+;;; setup use-package
 (require 'package)
 
 (setq package-archives
@@ -22,23 +24,21 @@
 (setq package-enable-at-startup nil)
 (package-initialize nil)
 
-
 (defun refresh-contents (&rest args)
   (package-refresh-contents)
   (advice-remove 'package-install 'refresh-contents))
 
 (advice-add 'package-install :before 'refresh-contents)
 
-
 (unless (package-installed-p 'use-package)
   (message "EMACS install use-package.el")
   (package-install 'use-package))
-
 
 (require 'use-package)
 (setq use-package-always-ensure t)
 
 
+;;; add helper to load modules
 (defconst user-init-dir
   (cond ((boundp 'user-emacs-directory) user-emacs-directory)
 	  ((boundp 'user-init-directory) user-init-directory)
@@ -50,29 +50,11 @@
   (load-file (expand-file-name file user-init-dir)))
 
 
-;;; navigation and view
-(load-user-file "core/common.el")
-(load-user-file "core/xah-fly-keys.el")
-(load-user-file "core/ivy.el")
-(load-user-file "core/neotree.el")
-(load-user-file "core/find-file-in-project.el")
-(load-user-file "core/theme.el")
-;;; helpers
-(load-user-file "core/multiple-cursors.el")
-(load-user-file "core/company.el")
-(load-user-file "core/yasnippet.el")
-(load-user-file "core/editorconfig.el")
-(load-user-file "core/linum.el")
-(load-user-file "core/flycheck.el")
-(load-user-file "core/doc.el")
-(load-user-file "core/smartparens.el")
-;;; syntax
-(load-user-file "core/css-mode.el")
-(load-user-file "core/js-mode.el")
-(load-user-file "core/pug-mode.el")
-(load-user-file "core/ts-mode.el")
-;;; fun
-(load-user-file "core/fireplace.el")
+(load-user-file "modules/ui.el")
+(load-user-file "modules/vcs.el")
+(load-user-file "modules/navigation.el")
+(load-user-file "modules/helpers.el")
+(load-user-file "modules/syntax.el")
 
 
 (setq custom-file "~/.emacs.d/customize.el") ; configuration setted up through the customize menu
