@@ -1,3 +1,33 @@
+;;; -*- lexical-binding: t -*-
+
+(require 'f)
+
+(setq inhibit-startup-buffer-menu t)
+(setq inhibit-startup-screen t)
+(setq ring-bell-function 'ignore)
+
+;; Backup/autosave files
+(setq auto-save-default        nil)
+(setq backup-by-copying        t)
+(setq backup-directory-alist (list (cons "." (f-expand "backups" user-emacs-directory))))
+(setq delete-old-versions      t)
+(setq make-backup-files        t)
+(setq require-final-newline    t)
+(add-hook 'before-save-hook 'whitespace-cleanup)
+
+;; Scrolling settings
+(setq scroll-step               1)
+(setq scroll-margin            10)
+(setq scroll-conservatively 10000)
+
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+(menu-bar-mode 0)
+(delete-selection-mode 1)
+
+;; Coding-system settings
+(set-language-environment 'UTF-8)
+
 ;; integrate kill-ring with macos clipboard
 ;; @see https://github.com/emacsfodder/pbcopy.el
 
@@ -82,4 +112,4 @@ See `x-set-selection'."
 
 (add-hook 'terminal-init-xterm-hook 'turn-on-pbcopy)
 
-(provide 'core-clipboard)
+(provide 'my-global)
