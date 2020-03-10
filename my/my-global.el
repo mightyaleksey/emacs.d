@@ -26,7 +26,10 @@
 (delete-selection-mode 1)
 
 ;; Coding-system settings
-(set-language-environment 'UTF-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
+;; (set-language-environment 'UTF-8)
 
 ;; integrate kill-ring with macos clipboard
 ;; @see https://github.com/emacsfodder/pbcopy.el
@@ -52,8 +55,8 @@ This is in addition to, but in preference to, the primary selection.")
 See `x-set-selection'."
   (when pbcopy-program
     (let* ((process-connection-type nil)
-           (proc (start-process "pbcopy" nil "pbcopy"
-                                "-selection" (symbol-name type))))
+	   (proc (start-process "pbcopy" nil "pbcopy"
+				"-selection" (symbol-name type))))
       (process-send-string proc data)
       (process-send-eof proc))))
 
@@ -70,34 +73,34 @@ See `x-set-selection'."
   (when pbcopy-program
     (let (clip-text primary-text)
       (when pbcopy-select-enable-clipboard
-        (let ((tramp-mode nil)
-              (default-directory "~"))
-          (setq clip-text (shell-command-to-string "pbpaste")))
-        (setq clip-text
-              (cond ;; check clipboard selection
-               ((or (not clip-text) (string= clip-text ""))
-                (setq pbcopy-last-selected-text-primary nil))
-               ((eq      clip-text pbcopy-last-selected-text-clipboard) nil)
-               ((string= clip-text pbcopy-last-selected-text-clipboard)
-                ;; Record the newer string,
-                ;; so subsequent calls can use the `eq' test.
-                (setq pbcopy-last-selected-text-clipboard clip-text)
-                nil)
-               (t (setq pbcopy-last-selected-text-clipboard clip-text)))))
+	(let ((tramp-mode nil)
+	      (default-directory "~"))
+	  (setq clip-text (shell-command-to-string "pbpaste")))
+	(setq clip-text
+	      (cond ;; check clipboard selection
+	       ((or (not clip-text) (string= clip-text ""))
+		(setq pbcopy-last-selected-text-primary nil))
+	       ((eq      clip-text pbcopy-last-selected-text-clipboard) nil)
+	       ((string= clip-text pbcopy-last-selected-text-clipboard)
+		;; Record the newer string,
+		;; so subsequent calls can use the `eq' test.
+		(setq pbcopy-last-selected-text-clipboard clip-text)
+		nil)
+	       (t (setq pbcopy-last-selected-text-clipboard clip-text)))))
       (let ((tramp-mode nil)
-            (default-directory "~"))
-        (setq primary-text (shell-command-to-string "pbpaste")))
+	    (default-directory "~"))
+	(setq primary-text (shell-command-to-string "pbpaste")))
       (setq primary-text
-            (cond ;; check primary selection
-             ((or (not primary-text) (string= primary-text ""))
-              (setq pbcopy-last-selected-text-primary nil))
-             ((eq      primary-text pbcopy-last-selected-text-primary) nil)
-             ((string= primary-text pbcopy-last-selected-text-primary)
-              ;; Record the newer string,
-              ;; so subsequent calls can use the `eq' test.
-              (setq pbcopy-last-selected-text-primary primary-text)
-              nil)
-             (t (setq pbcopy-last-selected-text-primary primary-text))))
+	    (cond ;; check primary selection
+	     ((or (not primary-text) (string= primary-text ""))
+	      (setq pbcopy-last-selected-text-primary nil))
+	     ((eq      primary-text pbcopy-last-selected-text-primary) nil)
+	     ((string= primary-text pbcopy-last-selected-text-primary)
+	      ;; Record the newer string,
+	      ;; so subsequent calls can use the `eq' test.
+	      (setq pbcopy-last-selected-text-primary primary-text)
+	      nil)
+	     (t (setq pbcopy-last-selected-text-primary primary-text))))
       (or clip-text primary-text))))
 
 (defun turn-on-pbcopy ()

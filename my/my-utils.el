@@ -23,7 +23,7 @@ Version 2017-11-01"
     (progn
       (skip-chars-forward " \n\t")
       (when (re-search-backward "\n[ \t]*\n" nil "move")
-	(re-search-forward "\n[ \t]*\n"))
+  (re-search-forward "\n[ \t]*\n"))
       (push-mark (point) t t)
       (re-search-forward "\n[ \t]*\n" nil "move"))))
 
@@ -34,8 +34,8 @@ Version 2017-11-01"
   (interactive)
   (if (region-active-p)
       (progn
-	(forward-line 1)
-	(end-of-line))
+  (forward-line 1)
+  (end-of-line))
     (progn
       (end-of-line)
       (set-mark (line-beginning-position)))))
@@ -52,92 +52,92 @@ Version 2017-09-01"
   (interactive)
   (if (region-active-p)
       (progn
-	(let (($rb (region-beginning)) ($re (region-end)))
-	  (goto-char $rb)
-	  (cond
-	   ((looking-at "\\s(")
-	    (if (eq (nth 0 (syntax-ppss)) 0)
-		(progn
-		  ;; (message "left bracket, depth 0.")
-		  (end-of-line) ; select current line
-		  (set-mark (line-beginning-position)))
-	      (progn
-		;; (message "left bracket, depth not 0")
-		(up-list -1 t t)
-		(mark-sexp))))
-	   ((eq $rb (line-beginning-position))
-	    (progn
-	      (goto-char $rb)
-	      (let (($firstLineEndPos (line-end-position)))
-		(cond
-		 ((eq $re $firstLineEndPos)
-		  (progn
-		    ;; (message "exactly 1 line. extend to next whole line." )
-		    (forward-line 1)
-		    (end-of-line)))
-		 ((< $re $firstLineEndPos)
-		  (progn
-		    ;; (message "less than 1 line. complete the line." )
-		    (end-of-line)))
-		 ((> $re $firstLineEndPos)
-		  (progn
-		    ;; (message "beginning of line, but end is greater than 1st end of line" )
-		    (goto-char $re)
-		    (if (eq (point) (line-end-position))
-			(progn
-			  ;; (message "exactly multiple lines" )
-			  (forward-line 1)
-			  (end-of-line))
-		      (progn
-			;; (message "multiple lines but end is not eol. make it so" )
-			(goto-char $re)
-			(end-of-line)))))
-		 (t (error "logic error 42946" ))))))
-	   ((and (> (point) (line-beginning-position)) (<= (point) (line-end-position)))
-	    (progn
-	      ;; (message "less than 1 line" )
-	      (end-of-line) ; select current line
-	      (set-mark (line-beginning-position))))
-	   (t
-	    ;; (message "last resort" )
-	    nil))))
+  (let (($rb (region-beginning)) ($re (region-end)))
+    (goto-char $rb)
+    (cond
+     ((looking-at "\\s(")
+      (if (eq (nth 0 (syntax-ppss)) 0)
+    (progn
+      ;; (message "left bracket, depth 0.")
+      (end-of-line) ; select current line
+      (set-mark (line-beginning-position)))
+        (progn
+    ;; (message "left bracket, depth not 0")
+    (up-list -1 t t)
+    (mark-sexp))))
+     ((eq $rb (line-beginning-position))
+      (progn
+        (goto-char $rb)
+        (let (($firstLineEndPos (line-end-position)))
+    (cond
+     ((eq $re $firstLineEndPos)
+      (progn
+        ;; (message "exactly 1 line. extend to next whole line." )
+        (forward-line 1)
+        (end-of-line)))
+     ((< $re $firstLineEndPos)
+      (progn
+        ;; (message "less than 1 line. complete the line." )
+        (end-of-line)))
+     ((> $re $firstLineEndPos)
+      (progn
+        ;; (message "beginning of line, but end is greater than 1st end of line" )
+        (goto-char $re)
+        (if (eq (point) (line-end-position))
+      (progn
+        ;; (message "exactly multiple lines" )
+        (forward-line 1)
+        (end-of-line))
+          (progn
+      ;; (message "multiple lines but end is not eol. make it so" )
+      (goto-char $re)
+      (end-of-line)))))
+     (t (error "logic error 42946" ))))))
+     ((and (> (point) (line-beginning-position)) (<= (point) (line-end-position)))
+      (progn
+        ;; (message "less than 1 line" )
+        (end-of-line) ; select current line
+        (set-mark (line-beginning-position))))
+     (t
+      ;; (message "last resort" )
+      nil))))
     (progn
       (cond
        ((looking-at "\\s(")
-	;; (message "left bracket")
-	(mark-sexp)) ; left bracket
+  ;; (message "left bracket")
+  (mark-sexp)) ; left bracket
        ((looking-at "\\s)")
-	;; (message "right bracket")
-	(backward-up-list) (mark-sexp))
+  ;; (message "right bracket")
+  (backward-up-list) (mark-sexp))
        ((looking-at "\\s\"")
-	;; (message "string quote")
-	(mark-sexp)) ; string quote
+  ;; (message "string quote")
+  (mark-sexp)) ; string quote
        ;; ((and (eq (point) (line-beginning-position)) (not (looking-at "\n")))
        ;;  (message "beginning of line and not empty")
        ;;  (end-of-line)
        ;;  (set-mark (line-beginning-position)))
        ((or (looking-back "\\s_" 1) (looking-back "\\sw" 1))
-	;; (message "left is word or symbol")
-	(skip-syntax-backward "_w" )
-	;; (re-search-backward "^\\(\\sw\\|\\s_\\)" nil t)
-	(push-mark)
-	(skip-syntax-forward "_w")
-	(setq mark-active t)
-	;; (exchange-point-and-mark)
-	)
+  ;; (message "left is word or symbol")
+  (skip-syntax-backward "_w" )
+  ;; (re-search-backward "^\\(\\sw\\|\\s_\\)" nil t)
+  (push-mark)
+  (skip-syntax-forward "_w")
+  (setq mark-active t)
+  ;; (exchange-point-and-mark)
+  )
        ((and (looking-at "\\s ") (looking-back "\\s " 1))
-	;; (message "left and right both space" )
-	(skip-chars-backward "\\s " ) (set-mark (point))
-	(skip-chars-forward "\\s "))
+  ;; (message "left and right both space" )
+  (skip-chars-backward "\\s " ) (set-mark (point))
+  (skip-chars-forward "\\s "))
        ((and (looking-at "\n") (looking-back "\n" 1))
-	;; (message "left and right both newline")
-	(skip-chars-forward "\n")
-	(set-mark (point))
-	(re-search-forward "\n[ \t]*\n")) ; between blank lines, select next text block
+  ;; (message "left and right both newline")
+  (skip-chars-forward "\n")
+  (set-mark (point))
+  (re-search-forward "\n[ \t]*\n")) ; between blank lines, select next text block
        (t
-	;; (message "just mark sexp" )
-	(mark-sexp)
-	(exchange-point-and-mark))
+  ;; (message "just mark sexp" )
+  (mark-sexp)
+  (exchange-point-and-mark))
        ;;
        ))))
 
@@ -151,9 +151,9 @@ URL `http://ergoemacs.org/emacs/modernization_mark-word.html'
 Version 2018-10-11"
   (interactive)
   (let (
-	($skipChars "^'\"<>(){}[]“”‘’‹›«»「」『』【】〖〗《》〈〉〔〕（）〘〙")
-	$p1
-	)
+  ($skipChars "^'\"<>(){}[]“”‘’‹›«»「」『』【】〖〗《》〈〉〔〕（）〘〙")
+  $p1
+  )
     (skip-chars-backward $skipChars)
     (setq $p1 (point))
     (skip-chars-forward $skipChars)
@@ -192,15 +192,15 @@ URL `http://ergoemacs.org/emacs/emacs_shrink_whitespace.html'
 Version 2019-06-13"
   (interactive)
   (let* (
-	 ($eol-count 0)
-	 ($p0 (point))
-	 $p1 ; whitespace begin
-	 $p2 ; whitespace end
-	 ($charBefore (char-before))
-	 ($charAfter (char-after ))
-	 ($space-neighbor-p (or (eq $charBefore 32) (eq $charBefore 9) (eq $charAfter 32) (eq $charAfter 9)))
-	 $just-1-space-p
-	 )
+   ($eol-count 0)
+   ($p0 (point))
+   $p1 ; whitespace begin
+   $p2 ; whitespace end
+   ($charBefore (char-before))
+   ($charAfter (char-after ))
+   ($space-neighbor-p (or (eq $charBefore 32) (eq $charBefore 9) (eq $charAfter 32) (eq $charAfter 9)))
+   $just-1-space-p
+   )
     (skip-chars-backward " \n\t　")
     (setq $p1 (point))
     (goto-char $p0)
@@ -214,30 +214,30 @@ Version 2019-06-13"
     (cond
      ((eq $eol-count 0)
       (if $just-1-space-p
-	  (my-fly-delete-spaces)
-	(progn (my-fly-delete-spaces)
-	       (insert " ")))
+    (my-fly-delete-spaces)
+  (progn (my-fly-delete-spaces)
+         (insert " ")))
       )
      ((eq $eol-count 1)
       (if $space-neighbor-p
-	  (my-fly-delete-spaces)
-	(progn (my-delete-blank-lines) (insert " "))))
+    (my-fly-delete-spaces)
+  (progn (my-delete-blank-lines) (insert " "))))
      ((eq $eol-count 2)
       (if $space-neighbor-p
-	  (my-fly-delete-spaces)
-	(progn
-	  (my-delete-blank-lines)
-	  (insert "\n"))))
+    (my-fly-delete-spaces)
+  (progn
+    (my-delete-blank-lines)
+    (insert "\n"))))
      ((> $eol-count 2)
       (if $space-neighbor-p
-	  (my-fly-delete-spaces)
-	(progn
-	  (goto-char $p2)
-	  (search-backward "\n" )
-	  (delete-region $p1 (point))
-	  (insert "\n"))))
+    (my-fly-delete-spaces)
+  (progn
+    (goto-char $p2)
+    (search-backward "\n" )
+    (delete-region $p1 (point))
+    (insert "\n"))))
      (t (progn
-	  (message "nothing done. logic error 40873. shouldn't reach here" ))))))
+    (message "nothing done. logic error 40873. shouldn't reach here" ))))))
 
 (defun my-insert-space-before ()
   "Insert space before cursor."
@@ -302,30 +302,30 @@ Version 2018-06-11"
   (interactive)
   (let (($org-p (string-match "^*Org Src" (buffer-name))))
     (if (string= major-mode "minibuffer-inactive-mode")
-	(minibuffer-keyboard-quit) ; if the buffer is minibuffer
+  (minibuffer-keyboard-quit) ; if the buffer is minibuffer
       (progn
-	;; offer to save buffers that are non-empty and modified, even for non-file visiting buffer. (because kill-buffer does not offer to save buffers that are not associated with files)
-	(when (and (buffer-modified-p)
-		   (my-user-buffer-q)
-		   (not (string-equal major-mode "dired-mode"))
-		   (if (equal (buffer-file-name) nil)
-		       (if (string-equal "" (save-restriction (widen) (buffer-string))) nil t)
-		     t))
-	  (if (y-or-n-p (format "Buffer %s modified; Do you want to save? " (buffer-name)))
-	      (save-buffer)
-	    (set-buffer-modified-p nil)))
-	(when (and (buffer-modified-p)
-		   $org-p)
-	  (if (y-or-n-p (format "Buffer %s modified; Do you want to save? " (buffer-name)))
-	      (org-edit-src-save)
-	    (set-buffer-modified-p nil)))
-	;; save to a list of closed buffer
-	(when (buffer-file-name)
-	  (setq my-recently-closed-buffers
-		(cons (cons (buffer-name) (buffer-file-name)) my-recently-closed-buffers))
-	  (when (> (length my-recently-closed-buffers) my-recently-closed-buffers-max)
-	    (setq my-recently-closed-buffers (butlast my-recently-closed-buffers 1))))
-	(kill-buffer (current-buffer))))))
+  ;; offer to save buffers that are non-empty and modified, even for non-file visiting buffer. (because kill-buffer does not offer to save buffers that are not associated with files)
+  (when (and (buffer-modified-p)
+       (my-user-buffer-q)
+       (not (string-equal major-mode "dired-mode"))
+       (if (equal (buffer-file-name) nil)
+           (if (string-equal "" (save-restriction (widen) (buffer-string))) nil t)
+         t))
+    (if (y-or-n-p (format "Buffer %s modified; Do you want to save? " (buffer-name)))
+        (save-buffer)
+      (set-buffer-modified-p nil)))
+  (when (and (buffer-modified-p)
+       $org-p)
+    (if (y-or-n-p (format "Buffer %s modified; Do you want to save? " (buffer-name)))
+        (org-edit-src-save)
+      (set-buffer-modified-p nil)))
+  ;; save to a list of closed buffer
+  (when (buffer-file-name)
+    (setq my-recently-closed-buffers
+    (cons (cons (buffer-name) (buffer-file-name)) my-recently-closed-buffers))
+    (when (> (length my-recently-closed-buffers) my-recently-closed-buffers-max)
+      (setq my-recently-closed-buffers (butlast my-recently-closed-buffers 1))))
+  (kill-buffer (current-buffer))))))
 
 (defun my-new-empty-buffer ()
   "Create a new empty buffer.
@@ -349,5 +349,16 @@ Version 2016-06-19"
   (if (> (length my-recently-closed-buffers) 0)
       (find-file (cdr (pop my-recently-closed-buffers)))
     (progn (message "No recently close buffer in this session."))))
+
+(defun my-locate-js-executable (filename)
+  "Locate executable file path for a javascript library. Returns fullpath or nil."
+  (let* ((from (or (buffer-file-name) default-directory))
+         (fragment (concat "node_modules/.bin/" filename))
+         (dir (locate-dominating-file (or (buffer-file-name) default-directory) fragment)))
+
+    (if dir
+        (expand-file-name fragment dir)
+      nil)
+    ))
 
 (provide 'my-utils)

@@ -21,12 +21,13 @@
    company         ; Modular in-buffer completion framework
    company-tabnine ; TabNine completion backend
    cyphejor        ; Shorten names of major modes
-   editorconfig    ; EditorConfig plugin
+   editorconfig
    f               ; Modern API for working with files and dirs
    fireplace
    flycheck
    js2-mode        ; Improved JavaScript editing mode
    ivy             ; A generic completion mechanism
+   key-chord       ; Treat two keys as a command
    modalka         ; Native modal editing of your own design
    smart-mode-line ; A powerful and beautiful mode-line for Emacs
    smartparens     ; Tricks for working with all kinds of parenthesis
@@ -49,7 +50,7 @@
 
 (dolist (package package-selected-packages)
   (when (and (assq package package-archive-contents)
-	     (not (package-installed-p package)))
+       (not (package-installed-p package)))
     (package-install package t)))
 
 ;; Set up directories
