@@ -1,5 +1,4 @@
 auto-save-list
 backups
-customize.el
 elpa
-*.elc
+*.*~
