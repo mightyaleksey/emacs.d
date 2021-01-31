@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: with
+# key: with
+# --
+with ${data} as (
+  $0
+)

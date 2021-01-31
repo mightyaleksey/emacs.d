@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: select
+# key: select
+# --
+select ${1:*}
+from ${2:table}$0
